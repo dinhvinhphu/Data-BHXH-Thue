@@ -11,17 +11,25 @@ permissions:
 jobs:
   build-data-warehouse:
     runs-on: ubuntu-latest
+
     steps:
       - name: 1. Tai ma nguon
         uses: actions/checkout@v4
+
       - name: 2. Thiet lap Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: 3. Cai dat thu vien
-        run: pip install -r requirements.txt
+
+      - name: 3. Cai dat thu vien va trinh duyet Chromium
+        run: |
+          pip install -r requirements.txt
+          playwright install chromium
+          playwright install-deps chromium
+
       - name: 4. Chay Bot cao du lieu
         run: python crawler_master.py
+
       - name: 5. Luu file Kho du lieu
         run: |
           git config --local user.email "bot@kho-du-lieu.local"
