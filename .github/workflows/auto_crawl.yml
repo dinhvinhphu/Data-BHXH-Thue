@@ -1,0 +1,31 @@
+name: Tu Dong Cao Du Lieu BHXH & Thue
+
+on:
+  schedule:
+    - cron: '30 0 5,20 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-data-warehouse:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 1. Tai ma nguon
+        uses: actions/checkout@v4
+      - name: 2. Thiet lap Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: 3. Cai dat thu vien
+        run: pip install -r requirements.txt
+      - name: 4. Chay Bot cao du lieu
+        run: python crawler_master.py
+      - name: 5. Luu file Kho du lieu
+        run: |
+          git config --local user.email "bot@kho-du-lieu.local"
+          git config --local user.name "Auto Data Warehouse Bot"
+          git add KHO_DU_LIEU_BHXH_THUE.json
+          git commit -m "Cap nhat kho du lieu tu dong" || exit 0
+          git push
